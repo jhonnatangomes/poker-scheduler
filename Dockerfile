@@ -13,9 +13,6 @@ WORKDIR /app
 ENV NODE_ENV="production"
 
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 curl ca-certificates
@@ -31,6 +28,9 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
  && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
  && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
+# Throw-away build stage to reduce size of final image
+FROM base as build
+
 # Install node modules
 COPY --link package-lock.json package.json ./
 RUN npm ci --include=dev
@@ -44,13 +44,15 @@ RUN npm run build
 # Remove development dependencies
 RUN npm prune --omit=dev
 
-
 # Final stage for app image
 FROM base
+
+# Copy supercronic binary
+COPY --from=base /usr/local/bin/supercronic /usr/local/bin/supercronic
 
 # Copy built application
 COPY --from=build /app /app
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+ENTRYPOINT ["./entrypoint.sh"]
