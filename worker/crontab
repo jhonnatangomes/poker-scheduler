@@ -1,1 +1,1 @@
-30 8 * * * node worker
+0 * * * * node worker
