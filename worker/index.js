@@ -4,9 +4,6 @@ import { createClient } from '@libsql/client';
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
 
-const requestUrl =
-  'https://www.sharkscope.com/poker-statistics/networks/PartyPoker%2CPokerStars/activeTournaments?Filter=Type:H;Date!:1D;Class:SCHEDULED';
-
 async function main() {
   const tournaments = await fetchTournaments();
   const dbClient = await setupDb();
@@ -22,7 +19,7 @@ async function fetchTournaments() {
     return jsonResponse.Response.RegisteringTournamentsResponse
       .RegisteringTournaments.RegisteringTournament;
   }
-  const response = await fetch(requestUrl, {
+  const response = await fetch(process.env.REQUEST_URL, {
     headers: {
       accept: 'application/json, text/javascript, */*; q=0.01',
       'accept-language': 'en-US,en;q=0.9',
