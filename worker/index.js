@@ -24,9 +24,10 @@ async function fetchTournaments() {
   }
   const response = await fetch(requestUrl, {
     headers: {
-      Accept: 'application/json, text/javascript, */*; q=0.01',
-      'Accept-Language': 'en-US,en;q=0.9',
-      Connection: 'keep-alive',
+      accept: 'application/json, text/javascript, */*; q=0.01',
+      'accept-language': 'en-US,en;q=0.9',
+      password: process.env.SHARKSCOPE_PASSWORD,
+      username: process.env.SHARKSCOPE_USERNAME,
     },
   });
   const jsonResponse = await response.json();
