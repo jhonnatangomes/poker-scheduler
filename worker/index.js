@@ -9,6 +9,7 @@ async function main() {
   const dbClient = await setupDb();
   const dbTournaments = tournaments.map(sharkscopeTournamentToDbTournament);
   const query = generateQuery(dbTournaments);
+  await dbClient.execute('delete from tournaments;');
   await dbClient.execute(query);
 }
 

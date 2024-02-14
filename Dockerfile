@@ -12,6 +12,8 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV="production"
 
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
@@ -27,9 +29,6 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
  && chmod +x "$SUPERCRONIC" \
  && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
  && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
-
-# Throw-away build stage to reduce size of final image
-FROM base as build
 
 # Install node modules
 COPY --link package-lock.json package.json ./
@@ -48,7 +47,7 @@ RUN npm prune --omit=dev
 FROM base
 
 # Copy supercronic binary
-COPY --from=base /usr/local/bin/supercronic /usr/local/bin/supercronic
+COPY --from=build /usr/local/bin/supercronic /usr/local/bin/supercronic
 
 # Copy built application
 COPY --from=build /app /app
