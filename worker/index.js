@@ -22,7 +22,13 @@ async function fetchTournaments() {
     return jsonResponse.Response.RegisteringTournamentsResponse
       .RegisteringTournaments.RegisteringTournament;
   }
-  const response = await fetch(requestUrl);
+  const response = await fetch(requestUrl, {
+    headers: {
+      Accept: 'application/json, text/javascript, */*; q=0.01',
+      'Accept-Language': 'en-US,en;q=0.9',
+      Connection: 'keep-alive',
+    },
+  });
   const jsonResponse = await response.json();
   return jsonResponse.Response.RegisteringTournamentsResponse
     .RegisteringTournaments.RegisteringTournament;
