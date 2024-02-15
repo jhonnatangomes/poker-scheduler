@@ -57,9 +57,10 @@ function sharkscopeTournamentToDbTournament({
   ['@guarantee']: guarantee,
   ['@flags']: flagsString,
 }) {
+  const round = (n) => Math.round(n * 100) / 100;
   const stake = parseFloat(stakeString);
   const rake = parseFloat(rakeString);
-  const buyIn = stake + rake;
+  const buyIn = round(stake + rake);
   const flags = flagsString?.split(',');
   const isKo = flags?.includes('B');
   const isTurbo = flags?.includes('T');
@@ -75,7 +76,7 @@ function sharkscopeTournamentToDbTournament({
     stake,
     buy_in: buyIn,
     guarantee,
-    average_players: guarantee && buyIn ? guarantee / buyIn : null,
+    average_players: guarantee && buyIn ? Math.round(guarantee / buyIn) : null,
     speed,
     is_ko: isKo,
   };
