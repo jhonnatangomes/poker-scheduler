@@ -40,7 +40,7 @@ async function setupDb() {
   });
   if (process.env.NODE_ENV === 'development') {
     await client.execute(
-      'CREATE TABLE IF NOT EXISTS tournaments (id integer primary key autoincrement, site_id text, start_time integer, end_time integer, is_ko integer, speed text, name text, guarantee real, network text, buy_in real, stake real, rake real, tournament_structure_id integer, average_players integer);'
+      'CREATE TABLE IF NOT EXISTS tournaments (id integer primary key autoincrement, site_id text, start_time integer, end_time integer, is_ko integer, speed text, name text, guarantee real, network text, buy_in real, stake real, rake real, tournament_structure_id integer, average_players integer);',
     );
   }
   return client;
@@ -54,29 +54,29 @@ function sharkscopeTournamentToDbTournament({
   ['@name']: name,
   ['@rake']: rakeString,
   ['@stake']: stakeString,
-  ['@guarantee']: guarantee,
+  ['@guarantee']: guaranteeString,
   ['@flags']: flagsString,
 }) {
-  const round = (n) => Math.round(n * 100) / 100;
+  const round = n => Math.round(n * 100) / 100;
   const stake = parseFloat(stakeString);
   const rake = parseFloat(rakeString);
-  const buyIn = round(stake + rake);
   const flags = flagsString?.split(',');
   const isKo = flags?.includes('B');
   const isTurbo = flags?.includes('T');
   const isHyper = flags?.includes('ST');
   const speed = isTurbo ? 'turbo' : isHyper ? 'hyper' : 'regular';
+  const guarantee = parseFloat(guaranteeString) || null;
   return {
     site_id: id,
-    start_time: parseInt(startDate) * 1000,
-    end_time: parseInt(endDate) * 1000 || null,
+    start_time: parseInt(startDate) || null,
+    end_time: parseInt(endDate) || null,
     network,
     name,
     rake,
     stake,
-    buy_in: buyIn,
+    buy_in: round(stake + rake),
     guarantee,
-    average_players: guarantee && buyIn ? Math.round(guarantee / buyIn) : null,
+    average_players: guarantee && stake ? Math.round(guarantee / stake) : null,
     speed,
     is_ko: isKo,
   };
@@ -86,8 +86,8 @@ function generateQuery(dbTournaments) {
   const keys = Object.keys(dbTournaments[0]);
   const rows = dbTournaments
     .map(
-      (tournament) =>
-        `(${keys.map((key) => generateRowValue(tournament, key)).join(', ')})`
+      tournament =>
+        `(${keys.map(key => generateRowValue(tournament, key)).join(', ')})`,
     )
     .join(', ');
   return `insert into tournaments (${keys.join(', ')}) values ${rows};`;

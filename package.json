@@ -10,7 +10,9 @@
     "dev:worker": "node worker",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "get-current-tournaments": "node scripts/getCurrentTournaments.js && npm run format",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@libsql/client": "^0.4.3",
@@ -37,6 +39,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.1.6"
   },
   "engines": {

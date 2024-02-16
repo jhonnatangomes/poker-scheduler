@@ -14,24 +14,24 @@ export default function Index() {
       <ul>
         <li>
           <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
+            target='_blank'
+            href='https://remix.run/tutorials/blog'
+            rel='noreferrer'
           >
             Test
           </a>
         </li>
         <li>
           <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
+            target='_blank'
+            href='https://remix.run/tutorials/jokes'
+            rel='noreferrer'
           >
             Deep Dive Jokes App Tutorial
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+          <a target='_blank' href='https://remix.run/docs' rel='noreferrer'>
             Remix Docs
           </a>
         </li>
