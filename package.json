@@ -5,22 +5,22 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
+    "dev": "remix dev -c \"node server.js\"",
     "dev:db": "turso dev --db-file local.db",
     "dev:worker": "node worker",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "remix-serve ./build/index.js",
+    "start": "node server.js",
     "typecheck": "tsc",
     "get-current-tournaments": "node scripts/getCurrentTournaments.js && npm run format",
     "format": "prettier --write ."
   },
   "dependencies": {
     "@libsql/client": "^0.4.3",
-    "@remix-run/css-bundle": "^2.6.0",
+    "@remix-run/express": "^2.6.0",
     "@remix-run/node": "^2.6.0",
     "@remix-run/react": "^2.6.0",
-    "@remix-run/serve": "^2.6.0",
     "dotenv": "^16.4.4",
+    "express": "^4.18.2",
     "isbot": "^4.1.0",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
@@ -40,6 +40,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.1.6"
   },
   "engines": {

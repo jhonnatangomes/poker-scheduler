@@ -1,12 +1,12 @@
 import 'dotenv/config';
 
-import { createClient } from '@libsql/client';
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
+import { setupDb } from '../db';
 
 async function main() {
   const tournaments = await fetchTournaments();
-  const dbClient = await setupDb();
+  const dbClient = setupDb();
   const dbTournaments = tournaments.map(sharkscopeTournamentToDbTournament);
   const query = generateQuery(dbTournaments);
   await dbClient.execute('delete from tournaments;');
@@ -31,19 +31,6 @@ async function fetchTournaments() {
   const jsonResponse = await response.json();
   return jsonResponse.Response.RegisteringTournamentsResponse
     .RegisteringTournaments.RegisteringTournament;
-}
-
-async function setupDb() {
-  const client = createClient({
-    url: process.env.DATABASE_URL,
-    authToken: process.env.DATABASE_AUTH_TOKEN,
-  });
-  if (process.env.NODE_ENV === 'development') {
-    await client.execute(
-      'CREATE TABLE IF NOT EXISTS tournaments (id integer primary key autoincrement, site_id text, start_time integer, end_time integer, is_ko integer, speed text, name text, guarantee real, network text, buy_in real, stake real, rake real, tournament_structure_id integer, average_players integer);',
-    );
-  }
-  return client;
 }
 
 function sharkscopeTournamentToDbTournament({
